@@ -24,7 +24,10 @@
             "commands": "src/Console",
             "compose": "docker-compose.yml",
             "services": ["apache"],
-            "autostart": true
+            "autostart": true,
+            "hooks": {
+                "site-created": ["servers:apache-vhost"]
+            }
         }
     }
 }
