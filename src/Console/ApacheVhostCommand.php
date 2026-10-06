@@ -71,7 +71,7 @@ class ApacheVhostCommand extends Command
 
         file_put_contents($vhost, str_replace(self::PLACEHOLDER, $site, $sample));
 
-        $io->writeln("<info>Created " . Paths::relative($vhost) . "</> - https://{$site}.localhost:8443 once apache restarts (ide:restart).");
+        $io->writeln("<info>Created " . Paths::relative($vhost) . "</> - https://{$site}.localhost:8443 once apache reloads (servers:apache-reload).");
 
         return Command::SUCCESS;
     }
