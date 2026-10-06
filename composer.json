@@ -1,0 +1,30 @@
+{
+    "name": "yiendos/my-sites-ide-servers-apache",
+    "description": "Apache httpd web server, proxying PHP to the IDE's FPM container, for my-sites-ide",
+    "type": "my-sites-ide-plugin",
+    "license": "MIT",
+    "keywords": ["my-sites-ide", "apache", "httpd", "server", "vhost"],
+    "authors": [
+        {
+            "name": "Paul Yiend",
+            "email": "yiendos@sbmatrix.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Yiendos\\MySitesIde\\Servers\\Apache\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "symfony/console": "^7.3"
+    },
+    "extra": {
+        "my-sites-ide": {
+            "commands": "src/Console",
+            "compose": "docker-compose.yml",
+            "services": ["apache"],
+            "autostart": true
+        }
+    }
+}

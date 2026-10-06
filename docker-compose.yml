@@ -12,10 +12,15 @@ services:
         environment:
             FPM_HOST: "fpm:9000"
         volumes:
+            # Read-only config ships with the package; each site's vhosts are picked up from
+            # Repos/*/_build/config/*-apache.conf (see IncludeOptional in conf/httpd.conf)
             - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
-            - ./sites-enabled:/usr/local/apache2/conf/sites-enabled
-            - ./../ssl/selfsigned.crt:/usr/local/apache2/conf/server.crt
-            - ./../ssl/selfsigned.key:/usr/local/apache2/conf/server.key
-            - ./../../../../Repos:/opt/repos
+            # The self-signed certificate is shared with the IDE's nginx, so it stays in core
+            - ${IDE_ROOT}/_dev/environment/servers/ssl/selfsigned.crt:/usr/local/apache2/conf/server.crt
+            - ${IDE_ROOT}/_dev/environment/servers/ssl/selfsigned.key:/usr/local/apache2/conf/server.key
+            - ${IDE_ROOT}/Repos:/opt/repos
         networks:
-            - my-sites-ide 
+            - my-sites-ide
+
+    # started by `ide:spark` alongside APP (autostart: true in composer.json)
+    # PHP requests are proxied to the IDE's fpm service, so that needs to be running too
