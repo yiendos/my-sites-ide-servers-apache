@@ -2,7 +2,7 @@
 
 Apache httpd 2.4 for [my-sites-ide](https://github.com/yiendos/my-sites-ide), serving every site in
 `Repos/` over HTTPS on port 8443 and handing PHP to the IDE's `fpm` container. It runs alongside
-the IDE's own nginx (443), or instead of it - each site picks up whichever servers have a vhost for it.
+the [nginx plugin](https://github.com/yiendos/my-sites-ide-servers-nginx) (443), or instead of it - each site picks up whichever servers have a vhost for it.
 
 Written for: developers running sites in my-sites-ide who want them served by Apache, including
 ones moving over from the version of Apache that used to ship inside the IDE.
@@ -50,7 +50,7 @@ The parts that moved:
 |---|---|
 | `_dev/environment/servers/apache/` | this package |
 | `sample.vhost` | `stubs/sample.vhost` |
-| `SERVERS="nginx apache"` decided whether new sites got an Apache vhost | installing the plugin does - `SERVERS` is only for the IDE's own servers now (`nginx`) |
+| `SERVERS="nginx apache"` decided whether new sites got an Apache vhost | installing the plugin does - the IDE no longer reads `SERVERS` |
 | `apache` listed in `APP` | started by `autostart` |
 
 A container created before the move still mounts `httpd.conf` from the old path, which no longer
@@ -140,7 +140,7 @@ The plugin has no `.env` options of its own. To change how Apache behaves:
 | From the IDE | Used for |
 |---|---|
 | `Repos/` | mounted at `/opt/repos` - the sites and their vhosts |
-| `_dev/environment/servers/ssl/selfsigned.*` | the certificate, shared with nginx |
+| `_dev/environment/servers/ssl/selfsigned.*` | the certificate, shared with the nginx plugin |
 | the `fpm` service (`fpm:9000`) | PHP, through `ProxyPassMatch ... fcgi://${FPM_HOST}` |
 | `NAMESPACE` (root `.env`) | the image name, `${NAMESPACE}_apache` |
 | `IDE_ROOT` (set by the CLI and `_dev/cache/ide.env`) | reaching the paths above from `vendor/` |
