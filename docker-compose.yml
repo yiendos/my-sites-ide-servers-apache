@@ -15,7 +15,7 @@ services:
             # Read-only config ships with the package; each site's vhosts are picked up from
             # Repos/*/_build/config/*-apache.conf (see IncludeOptional in conf/httpd.conf)
             - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
-            # The self-signed certificate is shared with the IDE's nginx, so it stays in core
+            # The self-signed certificate is shared with the nginx plugin, so it stays in core
             - ${IDE_ROOT}/_dev/environment/servers/ssl/selfsigned.crt:/usr/local/apache2/conf/server.crt
             - ${IDE_ROOT}/_dev/environment/servers/ssl/selfsigned.key:/usr/local/apache2/conf/server.key
             - ${IDE_ROOT}/Repos:/opt/repos
