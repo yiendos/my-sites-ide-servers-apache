@@ -23,6 +23,7 @@
         "my-sites-ide": {
             "commands": "src/Console",
             "compose": "docker-compose.yml",
+            "env-example": "env-example",
             "services": ["apache"],
             "autostart": true,
             "hooks": {

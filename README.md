@@ -78,7 +78,7 @@ host (my-sites-ide CLI)
 
 browser --https:8443--> apache container
                           |- conf/httpd.conf: IncludeOptional /opt/repos/*/_build/config/*-apache.conf
-                          |- static files served straight from /opt/repos/<site>/Sites/public
+                          |- static files served straight from /opt/repos/<site>/<IDE_APP_DIR>/public
                           |- *.php ---- ProxyPassMatch fcgi://fpm:9000 ----> IDE fpm container
 ```
 
@@ -93,10 +93,10 @@ only - there's no plain-HTTP listener.
 
 `ide:create-site` and `ide:repo-clone` create that vhost for you through this plugin's
 `site-created` hook. It copies `stubs/sample.vhost` to `Repos/<site>/_build/config/1-<site>-apache.conf`,
-replacing `__PROJECT__` with the site name:
+replacing `__PROJECT__` with the site name and `__APP_PATH__` with its application folder (`<site>/<IDE_APP_DIR>`, e.g. `example/deploy`):
 
 - `ServerName <site>.localhost`, so https://<site>.localhost:8443
-- `DocumentRoot /opt/repos/<site>/Sites/public`
+- `DocumentRoot /opt/repos/<site>/<IDE_APP_DIR>/public`
 - PHP proxied to `${FPM_HOST}`, using the same document root
 
 A site that already has any `*-apache.conf` is left alone. A cloned repository usually brings its
@@ -144,6 +144,7 @@ The plugin has no `.env` options of its own. To change how Apache behaves:
 | the `fpm` service (`fpm:9000`) | PHP, through `ProxyPassMatch ... fcgi://${FPM_HOST}` |
 | `NAMESPACE` (root `.env`) | the image name, `${NAMESPACE}_apache` |
 | `IDE_ROOT` (set by the CLI and `_dev/cache/ide.env`) | reaching the paths above from `vendor/` |
+| `IDE_APP_DIR` (root `.env`, set by the CLI - `deploy` if it isn't) | the application folder in a new site's vhost - `<app>/public` is the document root |
 | the `my-sites-ide` network | reaching `fpm` |
 
 ## Troubleshooting
@@ -178,8 +179,8 @@ once per hostname.
 
 ## Known gaps
 
-- The vhost stub assumes a Laravel-style `Sites/public` document root. Other layouts need their
-  vhost edited after it's generated.
+- The vhost stub assumes a Laravel-style `public/` document root inside the application folder
+  (`IDE_APP_DIR`). Other layouts need their vhost edited after it's generated.
 - `ide:ssl` (Certbot) prints nginx directives only. To use a Certbot certificate with Apache,
   mount `_dev/environment/certificates/certbot/conf` and point the site vhost's
   `SSLCertificateFile`/`SSLCertificateKeyFile` at it by hand.
