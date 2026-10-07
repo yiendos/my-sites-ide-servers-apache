@@ -1,0 +1,5 @@
+# [apache]
+# Where each site's application code lives, inside Repos/<site>/ - an IDE setting, shared by
+# every plugin: deploy (the default), Sites for the older layout, or . for the repository root.
+# New Apache vhost config documents serve <app>/public. Existing ones aren't rewritten if you change it.
+#IDE_APP_DIR=deploy
